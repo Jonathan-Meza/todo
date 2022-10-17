@@ -1,19 +1,11 @@
 import React from "react";
-import { TodoContext } from "../TodoContext";
 import {toast} from 'react-toastify'
 import './TodoForm.css'
 
 
-function TodoForm(){
+function TodoForm({addTodo, openModal, setOpenModal}){
 
     const [newTodoValue, setNewTodoValue] = React.useState('');
-
-    const {addTodo} = React.useContext(TodoContext);
-
-    const {
-        openModal,
-        setOpenModal
-    } = React.useContext(TodoContext);
 
     const onChangeNewTodo = (event) => {
         let newTodo = event.target.value
