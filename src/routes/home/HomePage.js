@@ -1,22 +1,23 @@
 import React from 'react';
-import {  TodoCounter } from '../TodoCounter';
-import {  TodoSearch } from '../TodoSearch';
-import {  TodoList } from '../TodoList';
-import {  TodoItem } from '../TodoItem';
-import {  CreateTodoButton } from '../CreateTodoButton';
-import {  Modal} from '../Modal'
-import {  TodoForm } from "../TodoForm";
+import { useNavigate } from "react-router-dom"
 import {  ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import {  TodoHeader } from "../TodoHeader";
-import {  useTodos} from "./useTodos"
-import { TodosError } from '../TodosError';
-import { TodosLoading } from '../TodosLoading';
-import { EmptyTodos } from '../EmptyTodos';
-import { ChangeAlert} from '../ChangeAlert'
 
-function App() {
+import { useTodos } from '../useTodos';
+import { TodoCounter } from '../../ui/TodoCounter';
+import { TodoSearch } from '../../ui/TodoSearch';
+import { TodoList } from '../../ui/TodoList';
+import { TodoItem } from '../../ui/TodoItem';
+import { CreateTodoButton } from '../../ui/CreateTodoButton';
+import { TodoHeader } from "../../ui/TodoHeader";
+import { TodosError } from '../../ui/TodosError';
+import { TodosLoading } from '../../ui/TodosLoading';
+import { EmptyTodos } from '../../ui/EmptyTodos';
+import { ChangeAlert} from '../../ui/ChangeAlert'
 
+function HomePage() {
+
+  const navigate = useNavigate();
   const {state, stateUpdaters} = useTodos();
 
   const {
@@ -24,15 +25,14 @@ function App() {
     loading, 
     filteredTodos, 
     completeTodo,
-    openModal,
     completedTodos,
     totalTodos,
     searchValue
   } = state;
 
   const {
-    setOpenModal,
-    addTodo,
+    // setOpenModal,
+    // addTodo,
     deleteTodo,
     setSearchValue,
     sincronizedTodos
@@ -62,23 +62,20 @@ function App() {
         onEmptySearchResults = { (textSearch) => <p>no hay resultados para {textSearch}</p>}
         render = {todo=> (
           <TodoItem
-            key={todo.text}
+            key={todo.id}
             text={todo.text}
             completed={todo.completed}
-            onComplete= {()=>{completeTodo(todo.text)}}
-            onDelete={()=>{deleteTodo(todo.text)}}
+            onEdit = {()=>{
+              navigate(`/edit/${todo.id}`,
+              {
+                state: {todo}
+              }
+            )}}
+            onComplete= {()=>{completeTodo(todo.id)}}
+            onDelete={()=>{deleteTodo(todo.id)}}
           />
         )}
       />
-
-      {!!openModal && ( 
-      <Modal>
-        <TodoForm
-          addTodo = {addTodo}
-          openModal = {openModal}
-          setOpenModal = {setOpenModal}
-        />
-      </Modal>)}
 
       <ToastContainer
         position="top-right"
@@ -93,8 +90,7 @@ function App() {
         theme="colored"
       />
       <CreateTodoButton
-        openModal = {openModal}
-        setOpenModal = {setOpenModal}
+        onClick={()=>{navigate("/new")}}
       />
       <ChangeAlert
         sincronize = {sincronizedTodos}
@@ -105,4 +101,4 @@ function App() {
 
 }
 
-export default App;
+export {HomePage};

@@ -1,11 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import {toast} from 'react-toastify'
 import './TodoForm.css'
 
 
-function TodoForm({addTodo, openModal, setOpenModal}){
-
-    const [newTodoValue, setNewTodoValue] = React.useState('');
+function TodoForm(props){
+    const navigate = useNavigate();
+    const [newTodoValue, setNewTodoValue] = React.useState(props.defaultTodoText);
 
     const onChangeNewTodo = (event) => {
         let newTodo = event.target.value
@@ -13,7 +14,7 @@ function TodoForm({addTodo, openModal, setOpenModal}){
     }
 
     const onCancel = ()=>{
-        setOpenModal(false);
+        navigate("/");
     };
 
     const onSubmit = (event)=>{
@@ -25,15 +26,14 @@ function TodoForm({addTodo, openModal, setOpenModal}){
         }
 
 
-        addTodo(newTodoValue);
-        setNewTodoValue('')
-        setOpenModal(false);
         toast.success("Todo Agregado!");
+        props.submitEvent(newTodoValue)
+        navigate("/")
     };
 
     return (
         <form onSubmit={onSubmit}>
-            <label>Escribe tu nuevo TODO</label>
+            <label>{props.label}</label>
             <textarea 
                 id="newTodoxxx"
                 placeholder="Cortar la cebolla para el almuerzo"
@@ -52,7 +52,7 @@ function TodoForm({addTodo, openModal, setOpenModal}){
                     type="submit"
                     className="TodoForm-button TodoForm-button--add" 
                 >
-                    Añadir
+                    {props.submitText}
                 </button>
             </div>
 
